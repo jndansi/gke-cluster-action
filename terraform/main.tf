@@ -23,7 +23,7 @@ resource "google_service_account" "default" {
 
 resource "google_container_cluster" "main" {
   for_each        = var.name
-  name            = "${each.key}-cluster"
+  name            = "${each.value}-cluster"
   location        = var.location
 
   # We can't create a cluster with no node pool defined, but we want to only use
@@ -35,7 +35,7 @@ resource "google_container_cluster" "main" {
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
   for_each   = var.name 
-  name       = "${each.key}-node-pool"
+  name       = "${each.value}-node-pool"
   location   = var.location
   cluster    = google_container_cluster.main.name
   node_count = 1

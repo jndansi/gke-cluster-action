@@ -1,6 +1,6 @@
 variable "name" {
     description = "name to used"
-    type = map(string)
+    type = set(string)
     default = {
 
         cluster1 = "gitops"
