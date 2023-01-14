@@ -17,8 +17,9 @@ provider "google" {
 }
 
 resource "google_service_account" "default" {
-  account_id   = "${var.name}-sa"
-  display_name = "${var.name}-sa"
+  for_each        = var.name
+  account_id   = "${each.value}-sa"
+  display_name = "${each.value}-sa"
 }
 
 resource "google_container_cluster" "main" {
