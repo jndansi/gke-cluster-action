@@ -11,9 +11,3 @@ provider "google" {
   project     = "nimble-album-369317"
 }
 
-terraform {
-  backend "gcs" {
-    bucket  = "tf-state-prod"
-    prefix  = "terraform/state"
-  }
-}
