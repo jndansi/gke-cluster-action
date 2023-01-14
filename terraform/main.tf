@@ -22,8 +22,9 @@ resource "google_service_account" "default" {
 }
 
 resource "google_container_cluster" "main" {
-  name               = "${var.name}-cluster"
-  location           = var.location
+  for_each        = var.name
+  name            = "${each.value}-cluster"
+  location        = var.location
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -33,7 +34,8 @@ resource "google_container_cluster" "main" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "${var.name}-node-pool"
+  for_each   = var.name 
+  name       = "${each.value}-node-pool"
   location   = var.location
   cluster    = google_container_cluster.main.name
   node_count = 1

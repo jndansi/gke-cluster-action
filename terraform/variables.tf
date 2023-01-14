@@ -1,7 +1,13 @@
 variable "name" {
     description = "name to used"
-    type = string
-    default = "gitops"
+    type = map(string)
+    default = {
+
+        cluster1 = "gitops"
+        cluster2 = "gitops-2"
+        cluster3 = "gitops-3"
+
+    } 
   
 }
 
