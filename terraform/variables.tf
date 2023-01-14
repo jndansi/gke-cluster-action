@@ -1,14 +1,8 @@
 variable "name" {
     description = "name to used"
     type = set(string)
-    default = {
+    default = ([ "gitops", "gitops-2", "gitops-3"]) 
 
-        cluster1 = "gitops"
-        cluster2 = "gitops-2"
-        cluster3 = "gitops-3"
-
-    } 
-  
 }
 
 variable "project_id" {
