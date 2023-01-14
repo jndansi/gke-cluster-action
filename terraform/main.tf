@@ -1,11 +1,29 @@
-# resource "google_service_account" "default" {
-#   account_id   = "service-account-id"
-#   display_name = "Service Account"
-# }
+terraform {
+  required_providers {
+    google = {
+      source = "hashicorp/google"
+      version = "4.47.0"
+    }
+  }
 
-resource "google_container_cluster" "primary" {
-  name     = "work-cluster"
-  location = "us-central1"
+  backend "gcs" {
+    bucket = "terraform-backend-hard-work-374007"
+  }
+}
+
+provider "google" {
+  project = var.project_id
+  region = var.region
+}
+
+resource "google_service_account" "default" {
+  account_id   = "${var.name}-sa"
+  display_name = "${var.name}-sa"
+}
+
+resource "google_container_cluster" "main" {
+  name               = "${var.name}-cluster"
+  location           = var.location
 
   # We can't create a cluster with no node pool defined, but we want to only use
   # separately managed node pools. So we create the smallest possible default
@@ -15,17 +33,17 @@ resource "google_container_cluster" "primary" {
 }
 
 resource "google_container_node_pool" "primary_preemptible_nodes" {
-  name       = "work-cluster-pool"
-  location   = "us-central1"
-  cluster    = google_container_cluster.primary.name
+  name       = "${var.name}-node-pool"
+  location   = var.location
+  cluster    = google_container_cluster.main.name
   node_count = 1
 
   node_config {
     preemptible  = true
-    machine_type = "e2-medium"
+    machine_type = var.machine-type
 
     # Google recommends custom service accounts that have cloud-platform scope and permissions granted via IAM Roles.
-    service_account = "terraform@nimble-album-369317.iam.gserviceaccount.com"
+    service_account = google_service_account.default.email
     oauth_scopes    = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
