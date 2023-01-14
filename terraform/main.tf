@@ -37,7 +37,7 @@ resource "google_container_node_pool" "primary_preemptible_nodes" {
   for_each   = var.name 
   name       = "${each.value}-node-pool"
   location   = var.location
-  cluster    = google_container_cluster.main.name
+  cluster    = google_container_cluster.main[each.value].name
   node_count = 1
 
   node_config {
